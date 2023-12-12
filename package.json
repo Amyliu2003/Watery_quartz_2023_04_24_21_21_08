@@ -1,0 +1,42 @@
+{
+  "name": "winter-final",
+  "version": "1.0.0",
+  "description": "my 2023 winter IMA final",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "build": "vite build"
+  },
+  "keywords": [
+    "p5.js",
+    "webgl",
+    "realsense"
+  ],
+  "author": "Amy Liu",
+  "license": "ISC",
+  "dependencies": {
+    "cloudflare-scraper": "^2.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "json-bigint": "^1.0.0",
+    "net": "^1.0.2",
+    "node_characterai": "^1.1.3",
+    "node-canvas": "^2.9.0",
+    "node-fetch": "^3.3.1",
+    "openai": "^3.3.0",
+    "path": "^0.12.7",
+    "puppeteer": "^19.11.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "three": "^0.159.0",
+    "three-mesh-ui": "^6.5.4",
+    "uuid": "^9.0.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "vite": "^5.0.6"
+  }
+}
