@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="text-input" contenteditable="true">
+      style="
+        position: relative;
+        <!-- top: 50%;
+        left: 50%; -->
+        margin-bottom: 10px;
+        transform: translate(-50%, -50%);
+    </div>
+    <div id="text-input-replace" contenteditable="true"></div>
+    <div class="container"></div>
+
+    <!-- .intro element is here for the only purpose: When I embed this sandbox to
+    the Codrops article, the article page gets buggy with input autofocus.
+    Normally we want this to happen on page load: textInputEl.focus();
+    setCaretToEndOfInput(); but for embedded sandbox we do it on first click -->
+
+    <div
+      class="intro"
+      style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      "
+    >
+      click to start
+    </div>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.159.0/examples/jsm/",
+          "bufferGeometry": "https://unpkg.com/three@0.159.0/examples/jsm/utils/BufferGeometryUtils.js"
+        }
+      }
+    </script>
+    <script src="text3D.js" type="module"></script>
+  </body>
+</html>

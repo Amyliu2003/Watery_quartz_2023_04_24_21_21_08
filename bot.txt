@@ -1,0 +1,185 @@
+! version = 2.0
+
+// Bot variables
+
+// Substitutions
+! sub i'm     = i am
+! sub i'd     = i would
+! sub i've    = i have
+! sub i'll    = i will
+! sub don't   = do not
+! sub isn't   = is not
+! sub you'd   = you would
+! sub you're  = you are
+! sub you've  = you have
+! sub you'll  = you will
+! sub what's  = what is
+! sub whats   = what is
+! sub what're = what are
+! sub what've = what have
+! sub what'll = what will
+! sub who's   = who is
+
+// OPENING
++ please rate me
+- Ok. Give me a number between 1 and 10.{topic=gender}
+
+//GENDER
+> topic gender 
+
++ #
+* !{number}<star> => Please enter a valid number.
+* <star> <= 5 => <set sex=female> Interesting. What is your name?{topic=name}
+- <set sex=male>Interesting. What's your name?{topic=name}
+
+
++ *
+- Give me a number between 1 and 10.
+
+< topic
+
+// NAME
+
+> topic name
++ [my name is|i am] *
+% interesting what is your name
+- <set username=<formal>><set points=100>I get it, <get username>. How old are you?
+
+//AGE
++ [my age is|i am] #
+% i get it [*] how old are you
+- <set userage=<star>> <get userage> is an interesting age! Tell me, what is your highest education?{topic=education}
+
++ [my age is|i am] #
+% tell me your age to start the evaluation
+- <set userage=<star>> <get userage> is an interesting age! Tell me, what is your highest education?{topic=education}
+
++ *
+- Tell me your age to start the evaluation.
+
+< topic
+
+//education
+> topic education
+  
+  + [*] elementary school|grade school|folk school|junior school [*]
+  *<get userage> <= 12 => <set education=elementary school degree> Right thing for right time. Any relationship you are in? {topic=marriage}    
+  *<get userage> > 20 => <sub points=20> <set education=elementary school degree>  Intresting. Any relationship you are in? {topic=marriage}    
+  -<set education=<star>><sub points=<get userage>> Judged. 
+  
++ [*] junior high|middle school [*]
+* <get userage> <= 12 => Amazing.Intresting.Any relationship you are in? {topic=marriage}    
+* <get userage> <= 16 => <sub points=2> <set education=middle school>Right thing for right time. Intresting.Any relationship you are in? {topic=marriage}    
+* <get userage> > 30 => <sub points=2> <set education=middle school>Interesting. Intresting.Any relationship you are in? {topic=marriage}    
+-<set calculated_points=<call>calculatePoints <get userage></call>><set education=middle school> <sub points =<get calculated_points>> Judged.Intresting.Any relationship you are in? {topic=marriage}    
+
+> object calculatePoints javascript
+var userage = args[0];
+var points = (userage - 16) * 18 / 14;
+return points;
+< object
+
+  + [*] highschool|hs|secondary school [*]
+   *<get userage> <= 19 =><set education =highschool> Amazing. Any relationship you are in? {topic=marriage}    
+  *<get userage> <= 19 => <sub points=2> <set education =highschool> Right thing for right time.Any relationship you are in? {topic=marriage}    
+  *<get userage> > 30 => <sub points=20> <set education =highschool> Intresting.Any relationship you are in? {topic=marriage}    
+  -<set calculated_points=<call>calculatePoints <get userage></call>><sub points =<get calculated_points>><set education =highschool> Judged. Any relationship you are in? {topic=marriage} 
+
+  + [*] universiity|uni|college|bachelor|bachelor degree|undergraudate [*]
+  *<get userage> <= 19 => <set education =university> Amazing.Any relationship you are in? {topic=marriage}
+  *<get userage> <= 22 => <sub points=2> <set education =university> Right thing for right time.Any relationship you are in? {topic=marriage}
+  -<set calculated_points=<call>calculatePoints <get userage></call>><sub points =<get calculated_points>><set education =university> Judged.Any relationship you are in? {topic=marriage}
+  
+  + [*] master|master degree|graduate school [*]
+  *<get userage> <= 22 => <set education =master>Amazing.Any relationship you are in? {topic=marriage}
+  *<get userage> <= 27 => <sub points =2><set education =master> Right thing for right time.Any relationship you are in? {topic=marriage}
+  *<get userage> > 30 =>  <sub points =20> <set education =master> Intresting. Any relationship you are in? {topic=marriage}
+  -<set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points> <set education =master> Judged.{topic=marriage}  
+
+  + [*] phd|doctorate|doctor degree [*]
+  *<get userage> <= 35 => <set education =PHD>  Right thing for right time.Any relationship you are in? {topic=marriage}
+  *<get userage> > 40 => <sub points=20> <set education =PHD> Intresting. Any relationship you are in? {topic=marriage}
+  -<set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points>><set education =PHD>Judged.Any relationship you are in? {topic=marriage}
+ 
+  + *
+  - What is your highest level of education?
+  -What school you go last time?
+  -What is the highest degree you completed?
+
+< topic
+
+//MARRIAGE
+>topic marriage
+
+  + [*] yes|maybe|i do|yea|yeah|yep|i am [*]
+  % [*] any relationship you are in
+  *<get userage> <=18 && <get sex> == female => <sub points=10> <set relationship =has partner> Do you want to get married in the future?
+  *<get userage> <=18 && <get sex> == male => <set relationship =has partner> Do you want to get married in the future?
+  *<get sex> == female => <sub points=5> <set relationship =has partner> Ok. Are you married?
+  - Ok. Are you married?
+    
+  + [*] no|do not|nope|not really| i do not want to| not going to| wish i have one [*]
+  * <get userage> <=18 && <get sex> == female => <set relationship =is single> <sub points=0> Do you want to get married in the future?
+  * <get userage> <=18 && <get sex> == male => <set relationship =is single> <sub points=0> Do you want to get married in the future?
+  * <get userage> >=25 && <get sex> == female => <set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points>><set relationship =is single> Do you want to get married in the future?
+  * <get userage> >=25 && <get sex> == male => <set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points>> <set relationship =is single> Do you want to get married in the future?
+  -<set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points>><set relationship =is single> Do you want to get married in the future?
+  
+  + [*] yes|maybe|i do|yea|yeah|yep|i am [*]
+  % [*] do you want to get married in the future
+  * <get userage> <= 25 && <get sex> == female => <set marriage =want to get married><sub points=5> Judged. What is your family income? {topic=money}    
+  * <get userage> <= 25 && <get sex> == male => <set marriage =want to get married> Judged. What is your family income? {topic=money}    
+  * <get sex> == female => <set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points>><set marriage =want to get married> Interesting. What is your family income? {topic=money}     
+  -<set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points>> <set marriage =want to get married> Interesting. What is your family income? {topic=money}  
+  
+  + [*] no|do not|nope|not really| i do not want to| not going to| wish i have one [*]
+  % [*] do you want to get married in the future
+  * <get userage> >= 30 && <get sex> == female => <set marriage =don't want to get married> <sub points=5> Judged.  What is your family income? {topic=money}     
+  * <get userage> >= 40 && <get sex> == female => <set marriage =don't want to get married> <sub points=10> Judged. What is your family income? {topic=money}     
+   -<set calculated_points=<call>calculatePoints <get userage></call>> <sub points =<get calculated_points>> <set marriage=don't want to get married> Judged. What is your family income? {topic=money}     
+  
+  
+  + [*] yes|maybe|i do|yea|yeah|yep|i am [*]
+  % [*] are you married
+  * <get userage> <= 25 && <get sex> == female => <sub points=10> <set marriage =is married> Interesting. What is your family income? {topic=money}     
+  * <get userage> <= 25 && <get sex> == male => <sub points=5> <set marriage =is married> Interesting. What is your family income? {topic=money}     
+  * <get sex> == female => <sub points=5> <set marriage =is married> Judged. What is your family income? {topic=money}     
+  - <set marriage =is married>Judged. What is your family income? {topic=money}     
+  
+  
+  + [*] no|do not|nope|not really [*]
+  % [*] are you married
+  * <get userage> >= 30 && <get sex> ==female => <sub points=5> <set marriage =is unmarried>Judged. What is your family income? {topic=money}     
+  * <get userage> >= 40 && <get sex> == male => <sub points=10> <set marriage=is unmarried> Judged. What is your family income? {topic=money}     
+  - <sub points=5> <set marriage =is unmarried>Judged. What is your family income? {topic=money}     
+  
+  + *
+  - Are you in any relationship?
+  -I wonder if you are in love?
+  -Did you find the perfect one?
+  -Did you find the right one?
+
+<topic
+
+>topic money
+
+  + #
+  * <star> = 0 => <sub points = 20 > <set wealth =<star>> <set ending=<star>> Interesting. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  * <star> <= 15000 => <sub points = 18.14 > <set wealth =<star>> <set ending=<star>> Interesting. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life! {topic=ending}
+  * <star> <= 25000 => <sub points = 16.52 > <set wealth =<star>> <set ending=<star>> Judge. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  * <star> <= 35000 => <sub points = 14.96 > <set wealth =<star>> <set ending=<star>> Judge. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  * <star> <= 50000 => <sub points = 12.78 > <set wealth =<star>> <set ending=<star>> Judge. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  * <star> <= 75000 => <sub points = 9.54 > <set wealth =<star>> <set ending=<star>> Judge. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  * <star> <= 100000 => <sub points = 7.16 > <set wealth =<star>> <set ending=<star>> Judge. The survey is over.<get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  * <star> <= 150000 => <sub points = 3.98 > <set wealth =<star>>  <set ending=<star>> Cool. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  * <star> <= 200000 => <sub points =2.32 > <set wealth =<star>> Cool. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  - <set ending=true> Cool. The survey is over. <get username>, you are a <get userage> years old <get education> <get sex> who <get relationship> and <get marriage> with a $<get wealth> family income. You finished the Rate Me Please test! Your score is <get points>! Live a good life!
+  
+  + *
+  - Please type in number.
+  
+<topic
+
+
+  + *
+  - Say "please rate me" if you want to be rated.

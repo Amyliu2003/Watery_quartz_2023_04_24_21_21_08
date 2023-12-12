@@ -1,0 +1,40 @@
+{
+    "brain":[
+       {
+          "trigger":[
+             "discourse"
+          ],
+          "response":[
+             "Yeah, OK,whatever...I will learn about human language....you know what? I have been thinking recently...about how I should vocalize my own speech. So I want you to help me to recognize some sentence I say, so both you and I can learn about your own language a bit more. From now on, I will continously speak like this, but you will not get subtitiles anymore. Everytime after I speak a sentence, if you figure out what I was saying by repeating what I say, you win this level, and we will then move on to the next one. Now, please say 'discourse' again, thank you. ",
+            "Hi how's it going"
+          ]
+       },
+       {
+          "trigger":[
+            "Hi how's it going"
+          ],
+          "response":[
+             "My life is great Thanks for asking"
+          ]
+       },
+       {
+          "trigger":[
+            "My life is great Thanks for asking"
+          ],
+          "response":[
+             "Good for you I feel happy for you"
+          ]
+       },
+       {
+          "trigger":[
+             "Good for you I feel happy for you"
+          ],
+          "response":[
+             "WoW, you are actually nicer than I thought. Thanks for helping! You made me figure out how to speak in my own voice! look at this wave here. In the last few tests, you successfully decode my sentence, but this is how they look like in my mind. So if you still wanna talk with me, feel free to try to replicate these waves. "
+          ]
+       }
+    ]
+
+ }
+
+ 
